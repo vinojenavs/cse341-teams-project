@@ -3,7 +3,15 @@ import Path from 'path';
 import { fileURLToPath } from 'url';
 import pkg from './package.json' with { type: 'json' };
 import globalMiddleware from './src/middleware/global.js';
-import routes from './src/routes/router.js';
+// import routes from './src/routes/router.js';
+import { connectToDb, connectToMongoose } from './src/db/connect.js';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './src/swagger.js';
+import apiRouter from './src/routes/api-routes.js';
+import ejsRouter from './src/routes/ejs-routes.js';
+
+await connectToDb();
+await connectToMongoose();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = Path.dirname(__filename);
@@ -26,8 +34,11 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use(globalMiddleware);
-app.use('/', routes);
+//app.use('/', routes);
+app.use('/api', apiRouter);
+app.use('/', ejsRouter);
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Catch requests that did not match a route.
 app.use((req, res, next) => {
     const err = new Error('Page Not Found');
