@@ -3,7 +3,7 @@ import Path from 'path';
 import { fileURLToPath } from 'url';
 import pkg from './package.json' with { type: 'json' };
 import globalMiddleware from './src/middleware/global.js';
-// import routes from './src/routes/router.js';
+import routes from './src/routes/router.js';
 import { connectToDb, connectToMongoose } from './src/db/connect.js';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './src/swagger.js';
@@ -34,7 +34,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use(globalMiddleware);
-//app.use('/', routes);
+app.use('/', routes);
 app.use('/api', apiRouter);
 app.use('/', ejsRouter);
 
