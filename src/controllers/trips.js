@@ -16,9 +16,9 @@ export async function getTripByIdController(req, res) {
 export async function getAllTripsController(req, res) {
     try {
         const trips = await getAllTrips();
-//        if (!trips || trips.length === 0) {
-//            return res.status(404).json({ message: "No trips found" });
-//        }
+        if (!trips || trips.length === 0) {
+            return res.status(404).json({ message: "No trips found" });
+        }
         return res.json(trips);
     } catch (error) {
         console.error("Error fetching trips:", error);
